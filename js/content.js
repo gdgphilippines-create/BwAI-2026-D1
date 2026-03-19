@@ -24,11 +24,11 @@ const CONTENT = {
   credits: {
     label: '01 — Getting started',
     title: 'Google Cloud credits',
-    desc: 'Complete each step to get set up for the codelabs. Credits must be redeemed exactly once.',
+    desc: 'Complete each step to get set up for the codelabs.',
     steps: [
       {
         title: 'Redeem your Google Cloud credits',
-        sub: 'Claim your free credits for this event. One-time use only — these are precisely allocated per participant.',
+        sub: 'One-time use only — these are precisely allocated per participant.',
         linkText: 'Redeem credits',
         linkUrl: 'https://trygcp.dev/claim/deveco-gdg-12223e913c9',
       },
