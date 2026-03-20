@@ -52,7 +52,7 @@ const CONTENT = {
         title: "Set up your project",
         sub: "Follow the step-by-step instructions to configure your Google Cloud project.",
         linkText: "View instructions",
-        linkUrl: "../assets/cloud-resources-guide.pdf",
+        linkUrl: "assets/cloud-resources-guide.pdf",
       },
       {
         title: "Ready to build!",
