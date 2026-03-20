@@ -82,12 +82,12 @@ const CONTENT = {
           {
             num: "2",
             name: "Getting started",
-            url: "https://codelabs.developers.google.com/getting-started-google-antigravity?hl=en#9",
+            url: "https://codelabs.developers.google.com/getting-started-google-antigravity?hl=en#0",
           },
           {
             num: "3",
             name: "Advanced",
-            url: "https://codelabs.developers.google.com/getting-started-with-antigravity-skills?hl=en#4",
+            url: "https://codelabs.developers.google.com/getting-started-with-antigravity-skills?hl=en#0",
             tag: "explore ahead",
           },
         ],
