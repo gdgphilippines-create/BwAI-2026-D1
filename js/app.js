@@ -8,15 +8,20 @@ const ICONS = {
   instagram: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>',
 }
 
-const CHECKLIST_STORAGE_KEY = 'bwai-2026-checklist-state'
+// Global checklist registry — used by inline onclick handlers in generated HTML
+window.checklists = {}
 
 document.addEventListener('DOMContentLoaded', () => {
   renderHero()
   renderCredits()
+  renderGcloudSetup()
+  renderAntigravity()
   renderWorkshops()
   renderCommunity()
   renderFooter()
 })
+
+// ── Hero ─────────────────────────────────────────────────────────────────────
 
 function renderHero() {
   const h = CONTENT.hero
@@ -32,37 +37,183 @@ function renderHero() {
   }).join('')
 }
 
-function renderCredits() {
-  const c = CONTENT.credits
-  document.getElementById('creditsLabel').textContent = c.label
-  document.getElementById('creditsTitle').textContent = c.title
-  document.getElementById('creditsDesc').textContent = c.desc
-
-  const stepsEl = document.getElementById('checkSteps')
-  stepsEl.innerHTML = c.steps.map((step, i) => `
-    <div class="check-step" onclick="toggleCheck(this, ${i})">
-      <div class="check-box">${ICONS.check}</div>
-      <div class="check-text">
-        <div class="check-title">${step.title}</div>
-        <div class="check-sub">${step.sub}</div>
-        ${step.linkUrl ? `<a class="check-link" href="${step.linkUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${step.linkText} &rarr;</a>` : ''}
-      </div>
-    </div>
-  `).join('')
-
-  document.getElementById('badgeText').textContent = c.badge.text
-  document.getElementById('badgeSub').textContent = c.badge.sub
-
-  const savedState = getSavedChecklistState(c.steps.length)
-  window._checks = savedState.checks
-  isCollapsed = savedState.isCollapsed
-
-  document.querySelectorAll('.check-step').forEach((stepEl, index) => {
-    stepEl.classList.toggle('done', window._checks[index])
-  })
-
-  syncChecklistUI({ immediate: true })
+function toggleHeroDetails() {
+  document.getElementById('heroDetails').classList.toggle('open')
+  document.getElementById('heroToggle').classList.toggle('open')
 }
+
+// ── Generic checklist factory ─────────────────────────────────────────────────
+//
+// Each of the three checklist sections (01 Credits, 02 CLI Setup, 03 Antigravity)
+// is powered by this single factory. It manages its own state, storage, and UI,
+// and calls onComplete(allDone) whenever the completion state changes so the
+// caller can show/hide the next section.
+
+function createChecklist(key, content, ids, storageKey, onComplete) {
+  let checks = []
+  let isCollapsed = false
+  let timeoutId
+
+  function render() {
+    document.getElementById(ids.label).textContent = content.label
+    document.getElementById(ids.title).textContent = content.title
+    document.getElementById(ids.desc).textContent = content.desc
+
+    document.getElementById(ids.steps).innerHTML = content.steps.map((step, i) => `
+      <div class="check-step" onclick="window.checklists['${key}'].toggle(this, ${i})">
+        <div class="check-box">${ICONS.check}</div>
+        <div class="check-text">
+          <div class="check-title">${step.title}</div>
+          <div class="check-sub">${step.sub}</div>
+          ${step.linkUrl ? `<a class="check-link" href="${step.linkUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${step.linkText} &rarr;</a>` : ''}
+        </div>
+      </div>
+    `).join('')
+
+    document.getElementById(ids.badgeText).textContent = content.badge.text
+    document.getElementById(ids.badgeSub).textContent = content.badge.sub
+
+    const saved = loadState()
+    checks = saved.checks
+    isCollapsed = saved.isCollapsed
+
+    document.querySelectorAll(`#${ids.steps} .check-step`).forEach((el, i) => {
+      el.classList.toggle('done', checks[i])
+    })
+
+    sync({ immediate: true })
+  }
+
+  function toggle(el, i) {
+    checks[i] = !checks[i]
+    el.classList.toggle('done', checks[i])
+    save()
+    sync()
+  }
+
+  function expand() {
+    if (!checks.every(Boolean)) return
+    isCollapsed = !isCollapsed
+    document.getElementById(ids.steps).classList.toggle('collapsed', isCollapsed)
+    document.getElementById(ids.progress).classList.toggle('hidden', isCollapsed)
+    document.getElementById(ids.badgeExpand).classList.toggle('flipped', !isCollapsed)
+    save()
+  }
+
+  function sync({ immediate = false } = {}) {
+    const done = checks.filter(Boolean).length
+    const total = checks.length
+    const pct = Math.round((done / total) * 100)
+    const allDone = pct === 100
+
+    document.getElementById(ids.fill).style.width = pct + '%'
+    document.getElementById(ids.fill).classList.toggle('complete', allDone)
+    document.getElementById(ids.pct).textContent = pct + '%'
+    document.getElementById(ids.badge).classList.toggle('show', allDone)
+
+    clearTimeout(timeoutId)
+
+    // Notify parent of completion state (controls next section's visibility)
+    onComplete(allDone)
+
+    if (!allDone) {
+      isCollapsed = false
+      document.getElementById(ids.steps).classList.remove('collapsed')
+      document.getElementById(ids.progress).classList.remove('hidden')
+      document.getElementById(ids.badgeExpand).classList.remove('flipped')
+      save()
+      return
+    }
+
+    if (immediate) {
+      document.getElementById(ids.steps).classList.toggle('collapsed', isCollapsed)
+      document.getElementById(ids.progress).classList.toggle('hidden', isCollapsed)
+      document.getElementById(ids.badgeExpand).classList.toggle('flipped', !isCollapsed)
+      return
+    }
+
+    timeoutId = setTimeout(() => {
+      document.getElementById(ids.steps).classList.add('collapsed')
+      document.getElementById(ids.progress).classList.add('hidden')
+      document.getElementById(ids.badgeExpand).classList.remove('flipped')
+      isCollapsed = true
+      save()
+    }, 600)
+  }
+
+  function save() {
+    localStorage.setItem(storageKey, JSON.stringify({ checks, isCollapsed }))
+  }
+
+  function loadState() {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(storageKey) || '{}')
+      const savedChecks = Array.isArray(parsed.checks) ? parsed.checks : []
+      const c = Array.from({ length: content.steps.length }, (_, i) => Boolean(savedChecks[i]))
+      const allDone = c.every(Boolean)
+      return { checks: c, isCollapsed: allDone ? parsed.isCollapsed !== false : false }
+    } catch {
+      return { checks: Array.from({ length: content.steps.length }, () => false), isCollapsed: false }
+    }
+  }
+
+  const instance = { render, toggle, expand }
+  window.checklists[key] = instance
+  return instance
+}
+
+function setVisible(id, visible) {
+  document.getElementById(id).classList.toggle('visible', visible)
+}
+
+// ── Checklist section renderers ───────────────────────────────────────────────
+
+function renderCredits() {
+  createChecklist(
+    'credits',
+    CONTENT.credits,
+    {
+      label: 'creditsLabel', title: 'creditsTitle', desc: 'creditsDesc',
+      steps: 'checkSteps', fill: 'checkFill', pct: 'checkPct',
+      badge: 'checkBadge', badgeText: 'badgeText', badgeSub: 'badgeSub',
+      badgeExpand: 'badgeExpand', progress: 'creditsProgress',
+    },
+    'bwai-2026-checklist-state',  // preserve original key for backward compat
+    (allDone) => setVisible('post01Content', allDone)
+  ).render()
+}
+
+function renderGcloudSetup() {
+  createChecklist(
+    'gcloud',
+    CONTENT.gcloudSetup,
+    {
+      label: 'gcloudSetupLabel', title: 'gcloudSetupTitle', desc: 'gcloudSetupDesc',
+      steps: 'gcloudSteps', fill: 'gcloudFill', pct: 'gcloudPct',
+      badge: 'gcloudBadge', badgeText: 'gcloudBadgeText', badgeSub: 'gcloudBadgeSub',
+      badgeExpand: 'gcloudBadgeExpand', progress: 'gcloudProgress',
+    },
+    'bwai-2026-gcloud-state',
+    (allDone) => setVisible('post02Content', allDone)
+  ).render()
+}
+
+function renderAntigravity() {
+  createChecklist(
+    'antigravity',
+    CONTENT.antigravity,
+    {
+      label: 'antigravityLabel', title: 'antigravityTitle', desc: 'antigravityDesc',
+      steps: 'agSteps', fill: 'agFill', pct: 'agPct',
+      badge: 'agBadge', badgeText: 'agBadgeText', badgeSub: 'agBadgeSub',
+      badgeExpand: 'agBadgeExpand', progress: 'agProgress',
+    },
+    'bwai-2026-antigravity-state',
+    (allDone) => setVisible('post03Content', allDone)
+  ).render()
+}
+
+// ── Workshops & Community ─────────────────────────────────────────────────────
 
 function renderWorkshops() {
   const w = CONTENT.workshops
@@ -108,117 +259,4 @@ function renderFooter() {
   const f = CONTENT.footer
   document.getElementById('footerLine1').textContent = f.line1
   document.getElementById('footerLine2').textContent = f.line2
-}
-
-function toggleHeroDetails() {
-  document.getElementById('heroDetails').classList.toggle('open')
-  document.getElementById('heroToggle').classList.toggle('open')
-}
-
-let isCollapsed = false
-let completionTimeoutId
-
-function toggleCheck(el, i) {
-  window._checks[i] = !window._checks[i]
-  el.classList.toggle('done', window._checks[i])
-  saveChecklistState()
-  syncChecklistUI()
-}
-
-function expandChecklist() {
-  if (!window._checks.every(Boolean)) return
-
-  const steps = document.getElementById('checkSteps')
-  const progress = document.querySelector('.checklist-progress')
-  const chevron = document.getElementById('badgeExpand')
-  isCollapsed = !isCollapsed
-
-  if (isCollapsed) {
-    steps.classList.add('collapsed')
-    progress.classList.add('hidden')
-    chevron.classList.remove('flipped')
-  } else {
-    steps.classList.remove('collapsed')
-    progress.classList.remove('hidden')
-    chevron.classList.add('flipped')
-  }
-
-  saveChecklistState()
-}
-
-function setPostChecklistVisibility(isVisible) {
-  document.getElementById('postChecklistContent').classList.toggle('visible', isVisible)
-}
-
-function syncChecklistUI(options = {}) {
-  const { immediate = false } = options
-  const done = window._checks.filter(Boolean).length
-  const total = window._checks.length
-  const pct = Math.round((done / total) * 100)
-  const allDone = pct === 100
-  const fill = document.getElementById('checkFill')
-  const progress = document.querySelector('.checklist-progress')
-  const steps = document.getElementById('checkSteps')
-  const badge = document.getElementById('checkBadge')
-  const chevron = document.getElementById('badgeExpand')
-
-  fill.style.width = pct + '%'
-  fill.classList.toggle('complete', allDone)
-  document.getElementById('checkPct').textContent = pct + '%'
-  badge.classList.toggle('show', allDone)
-
-  clearTimeout(completionTimeoutId)
-
-  if (!allDone) {
-    isCollapsed = false
-    steps.classList.remove('collapsed')
-    progress.classList.remove('hidden')
-    chevron.classList.remove('flipped')
-    setPostChecklistVisibility(false)
-    saveChecklistState()
-    return
-  }
-
-  setPostChecklistVisibility(true)
-
-  if (immediate) {
-    steps.classList.toggle('collapsed', isCollapsed)
-    progress.classList.toggle('hidden', isCollapsed)
-    chevron.classList.toggle('flipped', !isCollapsed)
-    return
-  }
-
-  completionTimeoutId = setTimeout(() => {
-    steps.classList.add('collapsed')
-    progress.classList.add('hidden')
-    chevron.classList.remove('flipped')
-    isCollapsed = true
-    saveChecklistState()
-  }, 600)
-}
-
-function saveChecklistState() {
-  localStorage.setItem(CHECKLIST_STORAGE_KEY, JSON.stringify({
-    checks: window._checks,
-    isCollapsed,
-  }))
-}
-
-function getSavedChecklistState(stepCount) {
-  try {
-    const parsed = JSON.parse(localStorage.getItem(CHECKLIST_STORAGE_KEY) || '{}')
-    const savedChecks = Array.isArray(parsed.checks) ? parsed.checks : []
-    const checks = Array.from({ length: stepCount }, (_, index) => Boolean(savedChecks[index]))
-    const allDone = checks.every(Boolean)
-
-    return {
-      checks,
-      isCollapsed: allDone ? parsed.isCollapsed !== false : false,
-    }
-  } catch {
-    return {
-      checks: Array.from({ length: stepCount }, () => false),
-      isCollapsed: false,
-    }
-  }
 }

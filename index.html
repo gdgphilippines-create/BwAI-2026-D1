@@ -36,12 +36,12 @@
       <div class="section-title" id="creditsTitle"></div>
       <div class="section-desc" id="creditsDesc"></div>
       <div class="checklist-wrapper">
-        <div class="checklist-progress">
+        <div class="checklist-progress" id="creditsProgress">
           <div class="checklist-bar"><div class="checklist-fill" id="checkFill"></div></div>
           <div class="checklist-pct" id="checkPct">0%</div>
         </div>
         <div class="check-steps" id="checkSteps"></div>
-        <div class="checklist-badge" id="checkBadge" onclick="expandChecklist()">
+        <div class="checklist-badge" id="checkBadge" onclick="window.checklists.credits.expand()">
           <div class="badge-text" id="badgeText"></div>
           <div class="badge-sub" id="badgeSub"></div>
           <div class="badge-expand" id="badgeExpand">
@@ -50,35 +50,80 @@
         </div>
       </div>
     </section>
-
-    <div class="post-checklist-content" id="postChecklistContent">
+    <div class="post-checklist-content" id="post01Content">
       <div class="post-checklist-inner">
         <div class="divider"></div>
         <section class="section">
-          <div class="section-label" id="workshopsLabel"></div>
-          <div class="section-title" id="workshopsTitle"></div>
-          <div class="section-desc" id="workshopsDesc"></div>
-          <div id="workshopsList"></div>
-        </section>
-
-        <div class="divider"></div>
-        <section class="section">
-          <div class="section-label" id="communityLabel"></div>
-          <div class="section-title" id="communityTitle"></div>
-          <div class="section-desc" id="communityDesc"></div>
-          <div class="social-grid" id="socialGrid"></div>
-        </section>
-        <div class="divider"></div>
-        <footer class="footer">
-          <div class="footer-dots">
-            <span class="dot dot-blue"></span>
-            <span class="dot dot-red"></span>
-            <span class="dot dot-yellow"></span>
-            <span class="dot dot-green"></span>
+          <div class="section-label" id="gcloudSetupLabel"></div>
+          <div class="section-title" id="gcloudSetupTitle"></div>
+          <div class="section-desc" id="gcloudSetupDesc"></div>
+          <div class="checklist-wrapper">
+            <div class="checklist-progress" id="gcloudProgress">
+              <div class="checklist-bar"><div class="checklist-fill" id="gcloudFill"></div></div>
+              <div class="checklist-pct" id="gcloudPct">0%</div>
+            </div>
+            <div class="check-steps" id="gcloudSteps"></div>
+            <div class="checklist-badge" id="gcloudBadge" onclick="window.checklists.gcloud.expand()">
+              <div class="badge-text" id="gcloudBadgeText"></div>
+              <div class="badge-sub" id="gcloudBadgeSub"></div>
+              <div class="badge-expand" id="gcloudBadgeExpand">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+            </div>
           </div>
-          <p id="footerLine1"></p>
-          <p id="footerLine2"></p>
-        </footer>
+        </section>
+        <div class="post-checklist-content" id="post02Content">
+          <div class="post-checklist-inner">
+            <div class="divider"></div>
+            <section class="section">
+              <div class="section-label" id="antigravityLabel"></div>
+              <div class="section-title" id="antigravityTitle"></div>
+              <div class="section-desc" id="antigravityDesc"></div>
+              <div class="checklist-wrapper">
+                <div class="checklist-progress" id="agProgress">
+                  <div class="checklist-bar"><div class="checklist-fill" id="agFill"></div></div>
+                  <div class="checklist-pct" id="agPct">0%</div>
+                </div>
+                <div class="check-steps" id="agSteps"></div>
+                <div class="checklist-badge" id="agBadge" onclick="window.checklists.antigravity.expand()">
+                  <div class="badge-text" id="agBadgeText"></div>
+                  <div class="badge-sub" id="agBadgeSub"></div>
+                  <div class="badge-expand" id="agBadgeExpand">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <div class="post-checklist-content" id="post03Content">
+              <div class="post-checklist-inner">
+                <div class="divider"></div>
+                <section class="section">
+                  <div class="section-label" id="workshopsLabel"></div>
+                  <div class="section-title" id="workshopsTitle"></div>
+                  <div class="section-desc" id="workshopsDesc"></div>
+                  <div id="workshopsList"></div>
+                <div class="divider"></div>
+                <section class="section">
+                  <div class="section-label" id="communityLabel"></div>
+                  <div class="section-title" id="communityTitle"></div>
+                  <div class="section-desc" id="communityDesc"></div>
+                  <div class="social-grid" id="socialGrid"></div>
+                </section>
+                <div class="divider"></div>
+                <footer class="footer">
+                  <div class="footer-dots">
+                    <span class="dot dot-blue"></span>
+                    <span class="dot dot-red"></span>
+                    <span class="dot dot-yellow"></span>
+                    <span class="dot dot-green"></span>
+                  </div>
+                  <p id="footerLine1"></p>
+                  <p id="footerLine2"></p>
+                </footer>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 

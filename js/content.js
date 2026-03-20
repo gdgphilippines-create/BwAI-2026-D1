@@ -40,7 +40,7 @@ const CONTENT = {
       },
       {
         title: 'Ready to build!',
-        sub: 'Confirm you\'re all set and head to the codelabs below.',
+        sub: 'Confirm you\'re all set and head to the next steps below.',
       },
     ],
     badge: {
@@ -49,8 +49,68 @@ const CONTENT = {
     },
   },
 
+  gcloudSetup: {
+    label: '02 — Google Cloud CLI Setup',
+    title: 'Set up the Google Cloud CLI',
+    desc: 'Install and configure the Google Cloud CLI so you can interact with Google Cloud services from your terminal.',
+    steps: [
+      {
+        title: 'Download & install the Google Cloud CLI',
+        sub: 'Follow the instructions for your operating system.',
+        linkText: 'Install guide',
+        linkUrl: 'https://cloud.google.com/sdk/docs/install',
+      },
+      {
+        title: 'Run gcloud init',
+        sub: 'Initialize the CLI and configure your account settings.',
+        linkText: 'Initializing the CLI',
+        linkUrl: 'https://cloud.google.com/sdk/docs/initializing',
+      },
+      {
+        title: 'Authenticate with your Google account',
+        sub: "Log in so gcloud can access your project's resources.",
+        linkText: 'gcloud auth login',
+        linkUrl: 'https://cloud.google.com/sdk/gcloud/reference/auth/login',
+      },
+      {
+        title: 'Set your default project',
+        sub: 'Configure the project that gcloud commands will use by default.',
+        linkText: 'gcloud config set',
+        linkUrl: 'https://cloud.google.com/sdk/gcloud/reference/config/set',
+      },
+    ],
+    badge: {
+      text: 'CLI configured!',
+      sub: 'Google Cloud CLI is ready to use.',
+    },
+  },
+
+  antigravity: {
+    label: '03 — Google Antigravity',
+    title: 'Google Antigravity',
+    desc: 'Set up Google Antigravity — the next-generation agentic AI coding assistant powered by Gemini.',
+    steps: [
+      {
+        title: 'Download & install Antigravity',
+        sub: 'Get the latest version of Antigravity for your system.',
+        linkText: 'Download Antigravity',
+        linkUrl: 'https://antigravity.google/download',
+      },
+      {
+        title: 'Complete the Antigravity quickstart codelab',
+        sub: 'Follow the guided codelab to set up and explore Antigravity.',
+        linkText: 'Start codelab',
+        linkUrl: 'https://codelabs.developers.google.com/getting-started-google-antigravity?hl=en#0',
+      },
+    ],
+    badge: {
+      text: 'Antigravity ready!',
+      sub: "You're set to build with AI.",
+    },
+  },
+
   workshops: {
-    label: '02 — Codelabs',
+    label: '04 — Codelabs',
     title: 'Hands-on workshops',
     desc: 'Follow along during the sessions or explore at your own pace.',
     groups: [
@@ -74,7 +134,7 @@ const CONTENT = {
   },
 
   community: {
-    label: '03 — Community',
+    label: '05 — Community',
     title: 'GDG Manila',
     desc: 'Stay connected with the community.',
     links: [
