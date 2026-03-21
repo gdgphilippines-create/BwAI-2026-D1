@@ -39,7 +39,7 @@ const CONTENT = {
 
   credits: {
     label: "01 — Getting started",
-    title: "Google Cloud credits",
+    title: "Google Cloud Credits & Pre-requisites",
     desc: "Complete each step to get set up for the codelabs.",
     steps: [
       {
@@ -53,6 +53,18 @@ const CONTENT = {
         sub: "Follow the step-by-step instructions to configure your Google Cloud project.",
         linkText: "View instructions",
         linkUrl: "assets/cloud-resources-guide.pdf",
+      },
+      {
+        title: "Install Python 3.10+",
+        sub: "Download the official installer. Important: Check 'Add Python to PATH' during installation.",
+        linkText: "Download Python",
+        linkUrl: "https://www.python.org/downloads/",
+      },
+      {
+        title: "Install Git",
+        sub: "Required for cloning workshop repositories and version control.",
+        linkText: "Download Git",
+        linkUrl: "https://git-scm.com/downloads",
       },
       {
         title: "Ready to build!",
