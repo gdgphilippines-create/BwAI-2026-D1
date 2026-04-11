@@ -46,7 +46,7 @@ const CONTENT = {
         title: "Redeem your Google Cloud credits",
         sub: "One-time use only — these are precisely allocated per participant.",
         linkText: "Redeem credits",
-        linkUrl: "https://trygcp.dev/claim/deveco-gdg-12223e913c9",
+        linkUrl: "https://trygcp.dev/claim/deveco-gdg-a3bb8041fda",
       },
       {
         title: "Set up your project",
