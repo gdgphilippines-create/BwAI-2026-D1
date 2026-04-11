@@ -77,47 +77,7 @@ const CONTENT = {
     },
   },
 
-  workshops: {
-    label: "02 — Codelabs",
-    title: "Hands-on workshops",
-    desc: "Follow along during the sessions or explore at your own pace.",
-    groups: [
-      {
-        num: "Workshop 1",
-        title: "New era for agentic coding using Gemini 3 Pro and Antigravity",
-        items: [
-          {
-            num: "1",
-            name: "Basics",
-            url: "https://codelabs.developers.google.com/building-with-google-antigravity?hl=en#0",
-          },
-          {
-            num: "2",
-            name: "Getting started",
-            url: "https://codelabs.developers.google.com/getting-started-google-antigravity?hl=en#0",
-          },
-          {
-            num: "3",
-            name: "Advanced",
-            url: "https://codelabs.developers.google.com/getting-started-with-antigravity-skills?hl=en#0",
-            tag: "explore ahead",
-          },
-        ],
-      },
-      {
-        num: "Workshop 2",
-        title: "Create an AI agent with Antigravity",
-        items: [
-          {
-            num: "1",
-            name: "Start codelab",
-            url: "https://codelabs.developers.google.com/sdd-adk-antigravity",
-          },
-        ],
-      },
-    ],
-  },
-
+  
   community: {
     label: "03 — Community",
     title: "GDG Manila",
