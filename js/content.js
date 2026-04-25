@@ -7,7 +7,7 @@ const CONTENT = {
   hero: {
     badge: "GDG Manila",
     heading: "Build with AI 2026",
-    intro: "Break the Pattern — DAY 1",
+    intro: "Break the Pattern — DAY 3",
     details: [
       {
         type: "p",
